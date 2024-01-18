@@ -13,7 +13,7 @@ int main() {
     chars_written += snprintf(result + chars_written, sizeof(result) - chars_written, "%s", str1);
 
     // 第二次拼接，将字符串 str2 追加到 result
-    chars_written += snprintf(result + chars_written, sizeof(result) - chars_written, ", %s", str2);
+    chars_written += snprintf(result + strlen(result), sizeof(result) - strlen(), ", %s", str2);
 
     // 第三次拼接，将整型 int1 追加到 result
     chars_written += snprintf(result + chars_written, sizeof(result) - chars_written, ", %d", int1);
