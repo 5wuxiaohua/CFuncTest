@@ -9,6 +9,7 @@ LDFLAGS += -lrdkafka
 LDFLAGS += -lpthread
 LDFLAGS += -lcares
 LDFLAGS += -lpcap
+LDFLAGS += -lldns
 
 # 执行make时，带上TARGET参数，例如make TARGET=test
 ifdef TARGET
