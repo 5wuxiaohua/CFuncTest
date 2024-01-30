@@ -105,7 +105,5 @@ int main() {
 
     pcap_close(pcap);
     return 0;
-
-    return 0;
 }
 
