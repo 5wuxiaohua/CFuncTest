@@ -25,7 +25,6 @@ void *process_pcap_file(void *filename) {
 
     // Start capturing packets and call the packet_handler for each packet
     pcap_loop(pcap, 0, packet_handler, NULL);
-
     pcap_close(pcap);
 
     pthread_exit(NULL);
