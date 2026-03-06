@@ -1,42 +1,29 @@
 # 编译器
 CC = gcc
 
-# 编译器标志
+# 编译选项
 CFLAGS += -g -O0 -Wall -Wextra -std=gnu99
-# CFLAGS += Werror
+LDFLAGS += -lldns -lpcap -lpthread -lrdkafka -ljansson
 
-# 定义目标文件和源文件的默认值
-TARGET ?= main
-SRC ?= $(TARGET).c
+# 可执行文件输出目录
+BUILD_DIR = build
 
-# 执行make时，带上TARGET参数，例如make TARGET=test
-# 根据TARGET设置不同的LDFLAGS
-ifeq ($(TARGET), dns_parse)
-    LDFLAGS = -lldns -lpcap
-else ifeq ($(TARGET), inotify)
-    LDFLAGS = -lpthread -lpcap
-else ifneq ($(findstring kafka, $(TARGET)),)
-    LDFLAGS += -lrdkafka
-else ifeq ($(TARGET), pcap_write_file)
-    LDFLAGS = -lpcap
-else ifeq ($(TARGET), thread_quit)
-    LDFLAGS = -pthread
-else ifeq ($(TARGET), cjasson_performance)
-    LDFLAGS = -ljansson
-else
-    LDFLAGS = # 默认的 LDFLAGS
-endif
+# 默认目标：帮助信息
+.PHONY: all
+all:
+	@echo "Usage: make <target>  # e.g., make a"
 
-# 默认目标
-all: build/$(TARGET)
+%:
+	@$(MAKE) $(BUILD_DIR)/$@
+# 通用规则：根据目标名编译对应的 .c 文件
+$(BUILD_DIR)/%: %.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
-# 生成可执行文件
-build/$(TARGET): $(SRC) Makefile | build
-	$(CC) $(CFLAGS) $(SRC) -o $@ $(LDFLAGS)
+# 创建 build 目录（如果不存在）
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-build:
-	@mkdir -p $@
-
-# 清理生成的文件
+# clean 目标：删除 build 目录及所有可执行文件
+.PHONY: clean
 clean:
-	rm -rf build
+	rm -rf $(BUILD_DIR)
